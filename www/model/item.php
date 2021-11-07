@@ -1,9 +1,12 @@
 <?php
+// 汎用関数ファイルを読み込み
 require_once MODEL_PATH . 'functions.php';
+// データベースに関するファイルを読み込み
 require_once MODEL_PATH . 'db.php';
 
 // DB利用
 
+// 商品データ
 function get_item($db, $item_id){
   $sql = "
     SELECT
@@ -22,6 +25,7 @@ function get_item($db, $item_id){
   return fetch_query($db, $sql);
 }
 
+// 公開されている商品データ
 function get_items($db, $is_open = false){
   $sql = '
     SELECT
@@ -43,6 +47,7 @@ function get_items($db, $is_open = false){
   return fetch_all_query($db, $sql);
 }
 
+// 全商品
 function get_all_items($db){
   return get_items($db);
 }
@@ -51,6 +56,7 @@ function get_open_items($db){
   return get_items($db, true);
 }
 
+// 商品登録
 function regist_item($db, $name, $price, $stock, $status, $image){
   $filename = get_upload_filename($image);
   if(validate_item($name, $price, $stock, $filename, $status) === false){
@@ -59,6 +65,7 @@ function regist_item($db, $name, $price, $stock, $status, $image){
   return regist_item_transaction($db, $name, $price, $stock, $status, $image, $filename);
 }
 
+// 商品登録の際のトランザクション処理
 function regist_item_transaction($db, $name, $price, $stock, $status, $image, $filename){
   $db->beginTransaction();
   if(insert_item($db, $name, $price, $stock, $filename, $status) 
@@ -71,6 +78,7 @@ function regist_item_transaction($db, $name, $price, $stock, $status, $image, $f
   
 }
 
+// 商品データの新規作成（INSERT文）
 function insert_item($db, $name, $price, $stock, $filename, $status){
   $status_value = PERMITTED_ITEM_STATUSES[$status];
   $sql = "
@@ -88,6 +96,7 @@ function insert_item($db, $name, $price, $stock, $filename, $status){
   return execute_query($db, $sql);
 }
 
+// 商品ステータスの更新（UPDATE文）
 function update_item_status($db, $item_id, $status){
   $sql = "
     UPDATE
@@ -102,6 +111,7 @@ function update_item_status($db, $item_id, $status){
   return execute_query($db, $sql);
 }
 
+// 商品在庫数の更新（UPDATE文）
 function update_item_stock($db, $item_id, $stock){
   $sql = "
     UPDATE
@@ -116,6 +126,7 @@ function update_item_stock($db, $item_id, $stock){
   return execute_query($db, $sql);
 }
 
+// 商品データ削除のトランザクション処理
 function destroy_item($db, $item_id){
   $item = get_item($db, $item_id);
   if($item === false){
@@ -131,6 +142,7 @@ function destroy_item($db, $item_id){
   return false;
 }
 
+// 商品の削除（DELETE文)
 function delete_item($db, $item_id){
   $sql = "
     DELETE FROM
@@ -150,6 +162,7 @@ function is_open($item){
   return $item['status'] === 1;
 }
 
+// バリデーション
 function validate_item($name, $price, $stock, $filename, $status){
   $is_valid_item_name = is_valid_item_name($name);
   $is_valid_item_price = is_valid_item_price($price);

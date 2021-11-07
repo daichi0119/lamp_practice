@@ -1,7 +1,10 @@
 <?php
+// 汎用関数ファイルを読み込み
 require_once MODEL_PATH . 'functions.php';
+// データベースに関するファイルを読み込み
 require_once MODEL_PATH . 'db.php';
 
+// ユーザー
 function get_user($db, $user_id){
   $sql = "
     SELECT
@@ -19,6 +22,7 @@ function get_user($db, $user_id){
   return fetch_query($db, $sql);
 }
 
+// ログイン
 function get_user_by_name($db, $name){
   $sql = "
     SELECT
@@ -51,6 +55,7 @@ function get_login_user($db){
   return get_user($db, $login_user_id);
 }
 
+// ユーザー登録
 function regist_user($db, $name, $password, $password_confirmation) {
   if( is_valid_user($name, $password, $password_confirmation) === false){
     return false;
@@ -63,6 +68,7 @@ function is_admin($user){
   return $user['type'] === USER_TYPE_ADMIN;
 }
 
+// バリデーション
 function is_valid_user($name, $password, $password_confirmation){
   // 短絡評価を避けるため一旦代入。
   $is_valid_user_name = is_valid_user_name($name);
@@ -100,6 +106,7 @@ function is_valid_password($password, $password_confirmation){
   return $is_valid;
 }
 
+// ユーザーデータの挿入
 function insert_user($db, $name, $password){
   $sql = "
     INSERT INTO
