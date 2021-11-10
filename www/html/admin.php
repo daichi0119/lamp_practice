@@ -27,6 +27,9 @@ if(is_admin($user) === false){
   redirect_to(LOGIN_URL);
 }
 
+// トークン
+$token = get_csrf_token();
+
 // PDOを利用して全商品のデータを取得
 $items = get_all_items($db);
 // ビューの読み込み

@@ -39,12 +39,20 @@ $stock = get_post('stock');
 // imageをPOST値で取得
 $image = get_file('image');
 
+// トークンを取得
+$token = get__post('token');
+
 // 商品登録とエラーチェック
-if(regist_item($db, $name, $price, $stock, $status, $image)){
-  set_message('商品を登録しました。');
-}else {
-  set_error('商品の登録に失敗しました。');
-}
+if(is_valid_csrf_token($token)){
+  if(regist_item($db, $name, $price, $stock, $status, $image)){
+    set_message('商品を登録しました。');
+  }else {
+    set_error('商品の登録に失敗しました。');
+  }
+  }else {
+    set_error('不正な操作が行われました。');
+  }
+
 
 // adminページにリダイレクト
 redirect_to(ADMIN_URL);
