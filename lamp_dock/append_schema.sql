@@ -1,17 +1,17 @@
 -- 購入履歴画面テーブル history
 CREATE TABLE history (
-    purchased_history_id INT AUTO_INCREMENT,
+    id INT AUTO_INCREMENT,
     user_id INT,
     created DATETIME,
-    primary key(purchased_history_id)
+    primary key(id)
 );
 
 -- 購入明細画面テーブル　details
 CREATE TABLE details (
-    purchased_details_id INT AUTO_INCREMENT,
-    purchased_history_id INT,
+    id INT AUTO_INCREMENT,
+    history_id INT,
+    price INT,
     item_id INT,
     amount INT DEFAULT 0,
-    price_sum INT DEFAULT 0,
-    primary key(purchased_details_id)
+    primary key(id)
 );
