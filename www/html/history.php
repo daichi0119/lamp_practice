@@ -7,8 +7,8 @@ require_once MODEL_PATH . 'functions.php';
 require_once MODEL_PATH . 'user.php';
 // itemデータに関する関数ファイルを読み込み
 require_once MODEL_PATH . 'item.php';
-// rankingデータに関する関数ファイルを読み込み
-require_once MODEL_PATH . 'ranking.php';
+// orderデータに関する関数ファイルを読み込み
+require_once MODEL_PATH . 'order.php';
 
 // ログインチェックを行うため、セッション開始する
 session_start();
@@ -24,11 +24,11 @@ $db = get_db_connect();
 // PDOを利用してログインユーザーのデータを取得
 $user = get_login_user($db);
 
-// PDOを利用して開いたアイテムのデータを取得
-$items = get_open_items($db);
+// ログイン中のuser_idを取得
+$user_id = get_session('user_id');
 
-// データベースからランキング情報を取得
-$ranking = get_ranking($db);
+//全ての購入履歴を取得
+$all_history = get_all_history($db,$user_id);
 
 // ビューの読み込み
-include_once VIEW_PATH . 'index_view.php';
+include_once VIEW_PATH . '../view/history_view.php';

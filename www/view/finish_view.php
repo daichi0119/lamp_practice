@@ -1,8 +1,3 @@
-<?php
-// 汎用関数ファイルを読み込み
-require_once('../model/functions.php');
-?>
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>

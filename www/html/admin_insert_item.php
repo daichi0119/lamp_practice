@@ -40,7 +40,7 @@ $stock = get_post('stock');
 $image = get_file('image');
 
 // トークンを取得
-$token = get__post('token');
+$token = get_post('token');
 
 // 商品登録とエラーチェック
 if(is_valid_csrf_token($token)){

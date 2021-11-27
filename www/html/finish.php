@@ -9,6 +9,8 @@ require_once MODEL_PATH . 'user.php';
 require_once MODEL_PATH . 'item.php';
 // cartデータに関する関数ファイルを読み込み
 require_once MODEL_PATH . 'cart.php';
+// orderデータに関する関数ファイルを読み込み
+require_once MODEL_PATH . 'order.php';
 
 // ログインチェックを行うため、セッション開始する
 session_start();
@@ -26,6 +28,24 @@ $user = get_login_user($db);
 
 // PDOを利用してログインユーザーのカートデータを取得
 $carts = get_user_carts($db, $user['user_id']);
+
+// 購入履歴、購入明細のトランザクション
+
+  // トランザクションの開始
+  $db->beginTransaction();
+  try {
+  insert_history($db, $user['user_id']);
+  $id = $db->lastInsertId();
+  foreach($carts as $cart) {
+    insert_details($db, $id, $cart['item_id'], $cart['price'], $cart['amount']);
+  }
+  // コミット処理
+  $db->commit();
+}catch(PDOException $e){
+  // ロールバック処理
+  $db->rollback();
+  set_error($e->getMessage());
+}
 
 // ログインユーザーとカートデータに誤りがあった際のエラーチェック
 if(purchase_carts($db, $carts) === false){
